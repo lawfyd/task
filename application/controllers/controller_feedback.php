@@ -172,7 +172,19 @@ class Controller_Feedback extends Controller
 
             //change by admin name and text
             if($name != $_POST['name'] || $text != $_POST['text']) {
+                $sql = "UPDATE feedback SET name = :name,
+                        text = :text
+                        WHERE id = :id";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+                $stmt->bindParam(':name', $_POST['name'], PDO::PARAM_STR);
+                $stmt->bindParam(':text', $_POST['text'] , PDO::PARAM_STR);
+                $stmt->execute();
+
                 ModelFeedback::change_admin($id);
+
+                header('location:'.$_SERVER['HTTP_REFERER']);
+
             }
 
         }
